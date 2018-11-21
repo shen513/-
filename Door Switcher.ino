@@ -1,6 +1,6 @@
-
 #define GATE 6
 #define IR_SENSEOR A6
+
 void setup() {
   Serial.begin(9600);
   pinMode(IR_SENSEOR, INPUT_PULLUP);
