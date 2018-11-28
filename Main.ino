@@ -12,12 +12,15 @@
 #define ABSTRACT 20
 #define THRESHOLD 13
 #define DELAY_MS 100
+#define OR_FAN_IN 7
 
 MFRC522 rfid(SS_PIN, RST_PIN); //建立MFRC522物件
 
 bool isLock = false;
 void setup() 
 {
+pinMode(OR_FAN_IN, INPUT);
+  
   //RFID
   Serial.begin(9600);
   SPI.begin();
@@ -31,7 +34,7 @@ void setup()
 
 void loop() 
 {
-  if ((Serial.available() &&  Serial.read() == '1') || Validate_NFC() )
+  if ((Serial.available() &&  Serial.read() == '1') || Validate_NFC() || digitalRead(OR_FAN_IN) )
   {
       Open_Door();
       isLock = false;
