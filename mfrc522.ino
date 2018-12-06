@@ -4,13 +4,20 @@
 #define SS_PIN 10 //晶片選擇腳位
 #define RST_PIN 9 //設定重置腳位
 
+#define SIGNAL 4 //訊號輸出腳位
+#define ENABLE HIGH //定義預設電位
+#define DELAY_MS 1000 //輸出觸發持續時間，單位為ms
 
 MFRC522 rfid(SS_PIN, RST_PIN); //建立MFRC522物件
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(1000000);
+  pinMode(SIGNAL, OUTPUT);
+  
+    digitalWrite(SIGNAL,!ENABLE);
   SPI.begin();
   rfid.PCD_Init();
+  Serial.println("init completed");
 }
 byte cardID[] = {0xA0, 0x79, 0x7A, 0xA2};//固定rfid卡號 
 void loop() {
@@ -39,12 +46,14 @@ void loop() {
   //如果卡片通過驗證
   if (validate)
   {
-    Serial.println("open");
-  }
-  //卡片沒通過驗證
-  else
-  {
-    Serial.println("lock") ;
+    Serial.println("Trig: On");
+    digitalWrite(SIGNAL,ENABLE);
+   
+    Serial.println("wait a moment");
+    delay(DELAY_MS);
+    
+    Serial.println("Trig: Off");
+    digitalWrite(SIGNAL, !ENABLE);
   }
 
   rfid.PICC_HaltA();
